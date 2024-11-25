@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Jarak Aman Radiasi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <img src="{{ url_for('static', filename='NC.png') }}" alt="Logo Nuklir" class="logo">
+            <h1>Kalkulator Jarak Aman Radiasi</h1>
+            <form method="POST" action="/">
+                <label for="isotop">Pilih Isotop:</label>
+                <select id="isotop" name="isotop" required>
+                    <option value="Ir-192">Iridium-192</option>
+                    <option value="Au-198">Emas-198</option>
+                    <option value="Cs-137">Cesium-137</option>
+                    <option value="I-131">Iodine-131</option>
+                </select>
+
+                <label for="aktivitas">Aktivitas (A) dalam Ci:</label>
+                <input type="number" step="0.01" id="aktivitas" name="aktivitas" required>
+                
+                <label for="laju_paparan_supervisi">Laju Paparan untuk Supervisi (X) dalam mR/jam:</label>
+                <input type="number" step="0.01" id="laju_paparan_supervisi" name="laju_paparan_supervisi" required>
+
+                <label for="laju_paparan_pengendalian">Laju Paparan untuk Pengendalian (X) dalam mR/jam:</label>
+                <input type="number" step="0.01" id="laju_paparan_pengendalian" name="laju_paparan_pengendalian" required>
+                
+                <button type="submit">Hitung Jarak Aman</button>
+            </form>
+
+            {% if result_supervisi is not none and result_pengendalian is not none %}
+                <div class="result">
+                    <h2>Hasil</h2>
+                    <p>Jarak aman untuk Supervisi (r_supervisi) adalah: <span class="highlight">{{ result_supervisi }} meter</span></p>
+                    <p>Jarak aman untuk Pengendalian (r_pengendalian) adalah: <span class="highlight">{{ result_pengendalian }} meter</span></p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="log-container">
+            <h2>Log Perhitungan</h2>
+            <div class="log-cards">
+                {% for log in logs %}
+                    <div class="log-card {{ log.isotop }}">
+                        <p><strong>Isotop:</strong> {{ log.isotop }}</p>
+                        <p><strong>Aktivitas:</strong> {{ log.aktivitas }} Ci</p>
+                        <p><strong>Laju Paparan Supervisi:</strong> {{ log.laju_paparan_supervisi }} mR/jam</p>
+                        <p><strong>Laju Paparan Pengendalian:</strong> {{ log.laju_paparan_pengendalian }} mR/jam</p>
+                        <p><strong>Jarak Supervisi:</strong> <span class="highlight">{{ log.result_supervisi }} meter</span></p>
+                        <p><strong>Jarak Pengendalian:</strong> <span class="highlight">{{ log.result_pengendalian }} meter</span></p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
